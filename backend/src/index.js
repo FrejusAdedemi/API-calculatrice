@@ -3,7 +3,11 @@ const cors = require('cors');
 const mysql = require('mysql2/promise');
 
 const app = express();
-app.use(cors());
+app.use(cors(
+  {
+    origin: 'https://api-calculatrice.vercel.app',
+  }
+));
 app.use(express.json());
 
 const db = mysql.createPool({
