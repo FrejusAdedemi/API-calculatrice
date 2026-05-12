@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.page {
+  min-height: 100vh;
+  background: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 24px;
+}
+
+/* ── Corps calculatrice ── */
+.calc-body {
+  background: #1c1c1c;
+  border-radius: 24px;
+  padding: 20px;
+  width: 300px;
+  border: 2px solid #2a2a2a;
+}
+
+.calc-brand {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #444;
+  text-transform: uppercase;
+  text-align: right;
+  margin-bottom: 12px;
+}
+
+/* ── Écran LCD ── */
+.display {
+  background: #1a2a1a;
+  border-radius: 10px;
+  padding: 14px 16px 10px;
+  margin-bottom: 16px;
+  border: 1px solid #0d1a0d;
+  min-height: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.display-expr {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: #3a6a3a;
+  min-height: 16px;
+  text-align: right;
+  word-break: break-all;
+}
+
+.display-main {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 34px;
+  color: #7dff7d;
+  text-align: right;
+  word-break: break-all;
+  line-height: 1.1;
+}
+
+/* ── Grille de touches ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.btn {
+  height: 58px;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.07s, filter 0.07s;
+  letter-spacing: 0.5px;
+}
+
+.btn:active { transform: scale(0.93); filter: brightness(0.85); }
+
+.btn-fn  { background: #2d2d2d; color: #aaa; font-size: 16px; }
+.btn-fn:hover  { background: #353535; }
+
+.btn-op  { background: #d97b00; color: #fff; }
+.btn-op:hover  { background: #e88a00; }
+.btn-op.active { background: #fff; color: #d97b00; }
+
+.btn-num { background: #333; color: #eee; }
+.btn-num:hover { background: #3a3a3a; }
+
+.btn-zero { grid-column: span 2; text-align: left; padding-left: 22px; }
+.btn-eq   { background: #d97b00; color: #fff; }
+
+/* ── Historique ── */
+.hist-card {
+  background: #1c1c1c;
+  border-radius: 20px;
+  padding: 20px 24px;
+  width: 300px;
+  border: 2px solid #2a2a2a;
+}
+
+.hist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.hist-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #444;
+  text-transform: uppercase;
+}
+
+.btn-clear {
+  background: none;
+  border: 1px solid #3a3a3a;
+  color: #777;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+}
+.btn-clear:hover { border-color: #d97b00; color: #d97b00; }
+
+.hist-empty {
+  font-size: 13px;
+  color: #444;
+  text-align: center;
+  padding: 12px 0;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.hist-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #252525;
+  font-size: 14px;
+}
+.hist-row:last-child { border-bottom: none; }
+
+.hist-expr {
+  flex: 1;
+  color: #555;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+}
+
+.hist-res {
+  font-family: 'Share Tech Mono', monospace;
+  color: #7dff7d;
+  font-size: 14px;
+}
+
+.badge {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.badge-add { background: #1a3d22; color: #7dff7d; }
+.badge-sub { background: #3d2800; color: #d97b00; }
+.badge-mul { background: #1a2a3d; color: #7db8ff; }
+.badge-div { background: #2e1a3d; color: #c07dff; }
+
+.error { color: #ff5555 !important; font-size: 20px !important; }
