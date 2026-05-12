@@ -53,4 +53,6 @@ app.delete('/historique', async (req, res) => {
   res.json({ success: true });
 });
 
-app.listen(3000, () => console.log('Calculatrice sur port 3000'));
+const severless = require('serverless-http');
+
+module.exports = severless(app);
