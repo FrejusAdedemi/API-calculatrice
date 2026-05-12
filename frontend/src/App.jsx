@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
-const API = "http://localhost:3000";
+const API = "https://api-calculatrice-ja5p.vercel.app/";
 const symbols = { add: "+", sub: "−", mul: "×", div: "÷" };
 const opMap   = { "+": "add", "−": "sub", "×": "mul", "÷": "div" };
 
