@@ -1,22 +1,27 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');                    // ← mysql2 → pg
 
 const app = express();
-app.use(cors(
-  {
-    origin: 'https://api-calculatrice.vercel.app',
-  }
-));
+app.use(cors());                                   // ← on enlève la restriction origin
 app.use(express.json());
 
-const db = mysql.createPool({
-  host: process.env.DB_HOST || 'host.docker.internal',
-  port: process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'calculatrice'
+const db = new Pool({                              // ← createPool → new Pool
+  connectionString: process.env.DATABASE_URL,      // ← une seule variable au lieu de 5
+  ssl: { rejectUnauthorized: false }
 });
+
+// Créer la table au démarrage
+db.query(`
+  CREATE TABLE IF NOT EXISTS historique (
+    id SERIAL PRIMARY KEY,
+    operation VARCHAR(10),
+    a NUMERIC,
+    b NUMERIC,
+    resultat NUMERIC,
+    created_at TIMESTAMP DEFAULT NOW()
+  )
+`);
 
 const ops = {
   add: (a, b) => a + b,
@@ -32,8 +37,8 @@ const ops = {
     if (isNaN(a) || isNaN(b)) return res.status(400).json({ error: 'Paramètres invalides' });
     if (op === 'div' && b === 0) return res.status(400).json({ error: 'Division par zéro' });
     const result = ops[op](a, b);
-    await db.execute(
-      'INSERT INTO historique (operation, a, b, resultat) VALUES (?, ?, ?, ?)',
+    await db.query(                                // ← execute → query
+      'INSERT INTO historique (operation, a, b, resultat) VALUES ($1, $2, $3, $4)',  // ← ? → $1,$2...
       [op, a, b, result]
     );
     res.json({ result });
@@ -41,22 +46,21 @@ const ops = {
 });
 
 app.get('/historique', async (req, res) => {
-  const [rows] = await db.execute('SELECT * FROM historique ORDER BY created_at DESC LIMIT 20');
+  const { rows } = await db.query(               // ← [rows] → { rows }
+    'SELECT * FROM historique ORDER BY created_at DESC LIMIT 20'
+  );
   res.json(rows);
 });
 
-// Supprimer une ligne
 app.delete('/historique/:id', async (req, res) => {
-  await db.execute('DELETE FROM historique WHERE id = ?', [req.params.id]);
+  await db.query('DELETE FROM historique WHERE id = $1', [req.params.id]);  // ← ? → $1
   res.json({ success: true });
 });
 
-// Vider tout l'historique
 app.delete('/historique', async (req, res) => {
-  await db.execute('DELETE FROM historique');
+  await db.query('DELETE FROM historique');
   res.json({ success: true });
 });
 
-const serverless = require('serverless-http');
-
-module.exports = serverless(app);
+app.listen(3000, () => console.log('Backend sur port 3000'));  // ← plus de serverless
+module.exports = app;
