@@ -57,6 +57,6 @@ app.delete('/historique', async (req, res) => {
   res.json({ success: true });
 });
 
-const severless = require('serverless-http');
+const serverless = require('serverless-http');
 
-module.exports = severless(app);
+module.exports = serverless(app);
