@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const { add, sub, mul, div } = require('./calculator');  // ← importe les fonctions
 
 const app = express();
 app.use(cors());
@@ -11,7 +12,6 @@ const db = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Créer la table au démarrage
 db.query(`
   CREATE TABLE IF NOT EXISTS historique (
     id SERIAL PRIMARY KEY,
@@ -23,25 +23,23 @@ db.query(`
   )
 `);
 
-const ops = {
-  add: (a, b) => a + b,
-  sub: (a, b) => a - b,
-  mul: (a, b) => a * b,
-  div: (a, b) => a / b,
-};
+const ops = { add, sub, mul, div };  // ← utilise les fonctions de calculator.js
 
 ['add', 'sub', 'mul', 'div'].forEach(op => {
   app.get(`/${op}`, async (req, res) => {
     const a = parseFloat(req.query.a);
     const b = parseFloat(req.query.b);
     if (isNaN(a) || isNaN(b)) return res.status(400).json({ error: 'Paramètres invalides' });
-    if (op === 'div' && b === 0) return res.status(400).json({ error: 'Division par zéro' });
-    const result = ops[op](a, b);
-    await db.query(
-      'INSERT INTO historique (operation, a, b, resultat) VALUES ($1, $2, $3, $4)',
-      [op, a, b, result]
-    );
-    res.json({ result });
+    try {
+      const result = ops[op](a, b);  // ← appelle la fonction pure
+      await db.query(
+        'INSERT INTO historique (operation, a, b, resultat) VALUES ($1, $2, $3, $4)',
+        [op, a, b, result]
+      );
+      res.json({ result });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
   });
 });
 
