@@ -1,12 +1,24 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const client = require('prom-client');
 const { add, sub, mul, div } = require('./calculator');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ===== PROMETHEUS =====
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
+const requestCounter = new client.Counter({
+  name: 'request_count',
+  help: 'Nombre total de requêtes'
+});
+register.registerMetric(requestCounter);
+
+// ===== POSTGRESQL =====
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
@@ -23,15 +35,16 @@ db.query(`
   )
 `);
 
-const ops = { add, sub, mul, div };  // ← utilise les fonctions de calculator.js
+const ops = { add, sub, mul, div };
 
 ['add', 'sub', 'mul', 'div'].forEach(op => {
   app.get(`/${op}`, async (req, res) => {
+    requestCounter.inc(); // ← Prometheus compte la requête
     const a = parseFloat(req.query.a);
     const b = parseFloat(req.query.b);
     if (isNaN(a) || isNaN(b)) return res.status(400).json({ error: 'Paramètres invalides' });
     try {
-      const result = ops[op](a, b);  // ← appelle la fonction pure
+      const result = ops[op](a, b);
       await db.query(
         'INSERT INTO historique (operation, a, b, resultat) VALUES ($1, $2, $3, $4)',
         [op, a, b, result]
@@ -44,9 +57,7 @@ const ops = { add, sub, mul, div };  // ← utilise les fonctions de calculator.
 });
 
 app.get('/historique', async (req, res) => {
-  const { rows } = await db.query(
-    'SELECT * FROM historique ORDER BY created_at DESC LIMIT 20'
-  );
+  const { rows } = await db.query('SELECT * FROM historique ORDER BY created_at DESC LIMIT 20');
   res.json(rows);
 });
 
@@ -58,6 +69,12 @@ app.delete('/historique/:id', async (req, res) => {
 app.delete('/historique', async (req, res) => {
   await db.query('DELETE FROM historique');
   res.json({ success: true });
+});
+
+// ===== METRICS ENDPOINT =====
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
 });
 
 app.listen(3000, () => console.log('Backend sur port 3000'));
