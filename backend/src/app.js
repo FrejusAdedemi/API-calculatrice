@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
-const { add, sub, mul, div } = require('./calculator');  // ← importe les fonctions
+const { add, sub, mul, div } = require('./calculator');
 
 const app = express();
 app.use(cors());
