@@ -3,6 +3,11 @@ services:
     build: .
     ports:
       - "3000:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - backend-network
 
