@@ -1,100 +1,147 @@
-# 📋 Rapport des Ateliers DevOps — Frejus Adedemi
+# 🧮 API Calculatrice
 
-**GitHub du projet :** [FrejusAdedemi/API-calculatrice](https://github.com/FrejusAdedemi/API-calculatrice)
+Une application web complète de calculatrice avec historique des opérations, conteneurisée avec Docker, testée avec Jest, déployée sur le cloud et supervisée avec Prometheus & Grafana.
 
----
-
-## Atelier 1 — Docker & Docker Compose + Mini-projet API Calculatrice
-
-### Description
-Mise en place d'une application web conteneurisée composée d'un backend Node.js (Express) connecté à une base de données PostgreSQL, orchestrée avec Docker Compose. Le mini-projet consistait à développer une API REST de calculatrice (addition, soustraction, multiplication, division) avec persistance des opérations en base de données et un frontend React.
-
-### Ce que ça m'a apporté
-- Comprendre la différence entre une machine physique, une machine virtuelle et un conteneur Docker
-- Écrire un `Dockerfile` et un `docker-compose.yml` pour orchestrer plusieurs services
-- Gérer les réseaux Docker, les volumes pour la persistance des données
-- Connecter un frontend, un backend et une base de données dans un environnement conteneurisé
-- Utiliser les variables d'environnement pour sécuriser les configurations sensibles
+🌐 **Frontend :** [api-calculatrice.vercel.app](https://api-calculatrice.vercel.app)
+🚀 **Backend :** [api-calculatrice.onrender.com](https://api-calculatrice.onrender.com)
 
 ---
 
-## Atelier 2 — Mini-Projet BDD (Behavior-Driven Development)
+## 📦 Stack technique
 
-### Description
-Rédaction de user stories, critères d'acceptation, scénarios BDD (Gherkin : Given / When / Then) et tests manuels pour une application e-commerce type Amazon. Travail sur 7 fonctionnalités : recherche produit, fiche produit, ajout au panier, gestion du panier, code promo, checkout, confirmation de commande.
-
-### Ce que ça m'a apporté
-- Comprendre le principe du BDD et son importance dans les équipes de développement
-- Rédiger des user stories centrées sur l'utilisateur
-- Définir des critères d'acceptation clairs et testables
-- Écrire des scénarios Gherkin (Given / When / Then)
-- Traduire des besoins métier en tests manuels structurés
-
----
-
-## Atelier 3 — Déploiement CI/CD avec Vercel (Frontend) et Render (Backend)
-
-### Description
-Déploiement de l'application calculatrice sur des plateformes cloud : le frontend React sur Vercel et le backend Node.js sur Render. Mise en place d'un pipeline de déploiement continu permettant de déployer automatiquement à chaque push Git.
-
-### Ce que ça m'a apporté
-- Découvrir le déploiement d'applications en production
-- Comprendre la différence entre hébergement frontend (statique) et backend (serveur)
-- Configurer les variables d'environnement en production
-- Gérer les CORS entre un frontend déployé et une API distante
-- Comprendre le fonctionnement du déploiement continu (CD)
+| Couche | Technologie |
+|--------|-------------|
+| Frontend | React + Vite |
+| Backend | Node.js + Express |
+| Base de données | PostgreSQL |
+| Conteneurisation | Docker + Docker Compose |
+| Tests | Jest |
+| CI/CD | GitHub Actions + Vercel + Render |
+| Monitoring | Prometheus + Grafana |
 
 ---
 
-## Atelier 4 — Tests automatiques avec Jest en JavaScript
+## ✨ Fonctionnalités
 
-### Description
-Mise en place de tests automatiques avec Jest pour valider les fonctions de calcul de l'API (add, sub, mul, div). Séparation du code en modules (`calculator.js` / `app.js`), écriture des tests unitaires, gestion des cas limites (division par zéro, paramètres invalides). Les tests ont également été exécutés directement à l'intérieur du conteneur Docker via `docker compose exec api npm test`, permettant de valider le bon fonctionnement de l'application dans son environnement conteneurisé.
-
-### Ce que ça m'a apporté
-- Comprendre l'importance des tests automatiques pour éviter les régressions
-- Écrire des tests unitaires avec Jest (`expect`, `toBe`, `toThrow`)
-- Séparer la logique métier de la couche Express pour faciliter les tests
-- Lancer les tests avec `npm test` en local et avec `docker compose exec api npm test` dans le conteneur
-- Comprendre que les tests doivent fonctionner aussi bien en local que dans l'environnement Docker
-- Adopter une approche de développement plus fiable et professionnelle
+- ➕ Addition, ➖ Soustraction, ✖️ Multiplication, ➗ Division
+- 📜 Historique des opérations persisté en base de données
+- 🗑️ Suppression d'une opération ou de tout l'historique
+- 📊 Monitoring du trafic en temps réel avec Grafana
+- ✅ Tests automatiques avec Jest
+- 🔄 Pipeline CI/CD avec GitHub Actions
 
 ---
 
-## Atelier 5 — Intégration Continue (CI) avec GitHub Actions
+## 🗂️ Structure du projet
 
-### Description
-Automatisation des tests Jest via une pipeline CI avec GitHub Actions. Création d'un workflow `.github/workflows/ci.yml` qui s'exécute automatiquement à chaque `git push` ou Pull Request : installation de Node.js, installation des dépendances, exécution des tests.
-
-### Ce que ça m'a apporté
-- Comprendre le principe de l'intégration continue (CI)
-- Créer et configurer une pipeline GitHub Actions
-- Automatiser l'exécution des tests à chaque modification du code
-- Lire et analyser les résultats d'une pipeline (succès / échec)
-- Comprendre l'importance de la CI dans une équipe de développement
-
----
-
-## Atelier 6 — Monitoring avec Docker, Prometheus et Grafana
-
-### Description
-Mise en place d'une solution complète de monitoring pour l'API calculatrice. Ajout de `prom-client` dans le backend pour exposer des métriques via `/metrics`, configuration de Prometheus pour collecter les données toutes les 5 secondes, et visualisation dans des dashboards Grafana personnalisés.
-
-### Ce que ça m'a apporté
-- Comprendre l'importance du monitoring en production
-- Exposer des métriques applicatives avec `prom-client` (Counter, collectDefaultMetrics)
-- Configurer Prometheus comme collecteur de métriques
-- Créer des dashboards Grafana pour visualiser le trafic en temps réel
-- Voir concrètement l'architecture DevOps complète : API → Prometheus → Grafana
-
----
-
-## Conclusion
-
-Ces six ateliers m'ont permis de découvrir et de pratiquer les principales étapes du cycle de vie d'une application en environnement professionnel : du développement à la conteneurisation, en passant par les tests automatiques, l'intégration continue, le déploiement cloud et le monitoring en production.
-
-La difficulté principale a été d'adapter les exemples du cours à mon projet existant (notamment l'intégration de Prometheus sur une API déjà connectée à PostgreSQL). Ces ateliers m'ont donné une vision concrète du métier DevOps et de l'importance de l'automatisation à chaque étape du développement logiciel.
+```
+API-calculatrice/
+├── backend/
+│   ├── src/
+│   │   ├── app.js          # Serveur Express + métriques Prometheus
+│   │   └── calculator.js   # Fonctions de calcul pures
+│   ├── tests/
+│   │   └── calculator.test.js
+│   ├── Dockerfile
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   ├── Dockerfile
+│   └── package.json
+├── prometheus/
+│   └── prometheus.yml
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── docker-compose.yml
+└── .env
+```
 
 ---
 
-*Rapport rédigé par Frejus Adedemi*
+## 🚀 Lancer le projet en local
+
+### Prérequis
+- Docker & Docker Compose installés
+- WSL (si Windows)
+
+### 1. Cloner le repo
+```bash
+git clone https://github.com/FrejusAdedemi/API-calculatrice.git
+cd API-calculatrice
+```
+
+### 2. Configurer les variables d'environnement
+Créer un fichier `.env` à la racine :
+```env
+DATABASE_URL=postgresql://user:password@database:5432/calculatrice
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+```
+
+### 3. Lancer l'application
+```bash
+docker compose up --build
+```
+
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:5173 |
+| Backend API | http://localhost:3000 |
+| Prometheus | http://localhost:9090 |
+| Grafana | http://localhost:3001 |
+
+---
+
+## 🧪 Lancer les tests
+
+```bash
+# En local
+cd backend
+npm test
+
+# Dans le conteneur Docker
+docker compose exec backend npm test
+```
+
+---
+
+## 📊 Monitoring
+
+L'API expose ses métriques via `/metrics` (format Prometheus).
+
+Prometheus les collecte toutes les **5 secondes** et Grafana les affiche dans un dashboard temps réel.
+
+```
+API Node.js  →  /metrics  →  Prometheus  →  Grafana
+```
+
+---
+
+## 🔄 Pipeline CI/CD
+
+À chaque `git push`, GitHub Actions :
+1. Installe Node.js
+2. Installe les dépendances
+3. Exécute les tests Jest automatiquement
+
+Le frontend se déploie automatiquement sur **Vercel** et le backend sur **Render**.
+
+---
+
+## 📡 Endpoints de l'API
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/add?a=5&b=2` | Addition |
+| GET | `/sub?a=9&b=3` | Soustraction |
+| GET | `/mul?a=4&b=3` | Multiplication |
+| GET | `/div?a=10&b=2` | Division |
+| GET | `/historique` | Liste des opérations |
+| DELETE | `/historique/:id` | Supprimer une opération |
+| DELETE | `/historique` | Vider l'historique |
+| GET | `/metrics` | Métriques Prometheus |
+
+---
+
+*Projet réalisé par **Frejus Adedemi** dans le cadre d'une formation DevOps*
